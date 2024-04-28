@@ -1,0 +1,29 @@
+{
+  "name": "osm_cache_map",
+  "version": "1.0.0",
+  "description": "Proxy with hard cache",
+  "main": "main.js",
+  "scripts": {
+    "clear": "rimraf ./dist && rimraf ./node_modules",
+    "build": "tsc",
+    "download": "node yet.js",
+    "start": "pm2 delete osmCacheMap & pm2 start"
+  },
+  "author": "Ruslan Timershin <metwisom@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "form-data": "^4.0.0",
+    "node-fetch": "^3.2.10",
+    "pm2": "^4.5.6"
+  },
+  "devDependencies": {
+    "@types/mkdirp": "^1.0.1",
+    "@types/node": "^14.14.37",
+    "@types/node-fetch": "^2.5.9",
+    "@typescript-eslint/eslint-plugin": "^4.20.0",
+    "@typescript-eslint/parser": "^4.20.0",
+    "eslint": "^7.23.0",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.2.3"
+  }
+}

@@ -1,0 +1,9 @@
+{
+    "HTTP_PORT": 3030,
+    "CACHE_FOLDER": "../cache/",
+    "HOSTS": [
+        "https://a.tile.openstreetmap.org",
+        "https://b.tile.openstreetmap.org",
+        "https://c.tile.openstreetmap.org"
+    ]
+}
