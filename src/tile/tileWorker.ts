@@ -1,12 +1,12 @@
 import {Status, StatusValues} from '../helpers/statuses';
 import {loadTile} from './loadTile';
-import readBuffer from '../readBuffer';
-import Config from '../config';
+import readBuffer from '../helpers/readBuffer';
+import {Config} from '../helpers/config';
 
 
 const tileCache: Record<string, Buffer> = {};
 
-async function tileWorker(path:string, pathFile:string):Promise<Buffer | boolean> {
+async function tileWorker(path: string, pathFile: string): Promise<Buffer | undefined> {
 
   const tileName = Config.CACHE_FOLDER + pathFile;
 
@@ -16,7 +16,7 @@ async function tileWorker(path:string, pathFile:string):Promise<Buffer | boolean
 
   if (tileCache[tileName] == undefined) {
     const buffer = await readBuffer(tileName);
-    if (typeof buffer != 'boolean' && buffer.length > 50) {
+    if (typeof buffer != 'undefined' && buffer.length > 50) {
       tileCache[tileName] = buffer;
     } else {
       tileCache[tileName] = await loadTile(path, pathFile);

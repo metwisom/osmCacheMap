@@ -1,70 +1,42 @@
-import favicon from '../helpers/favicon';
+import {favicon} from '../helpers/favicon';
 import {Status, StatusValues} from '../helpers/statuses';
-import {Response} from './index';
 import {tileWorker} from '../tile/tileWorker';
+import {Request} from './request';
 
-async function middleware(path: string | undefined, zoomLevel: string | undefined, line: string | undefined, filename: string | undefined): Promise<Response> {
-  if (path == 'favicon.ico') {
-    return {
-      code: 200,
-      data: favicon,
-      headers: {name: 'content-type', value: 'image/x-icon'}
-    };
+async function middleware(request: Request, params: string[]): Promise<void> {
+  if (params[0] == 'favicon.ico') {
+    return request.responseXIcon(favicon);
   }
 
-  if (path == 'status') {
-    const status = Status.currentStatus;
-    console.log('Запрошен режим: *' + status + '*');
-    return {
-      code: 200,
-      data: status,
-      headers: {name: 'content-type', value: 'text/plain'}
-    };
+  if (params[0] == 'status') {
+    return request.responsePlain(Status.currentStatus);
   }
 
-  if (path == StatusValues.online) {
-    status = StatusValues.online;
-    console.log('Режим *' + status + '*');
-    return {
-      code: 200,
-      data: 'OK',
-      headers: {name: 'content-type', value: 'text/plain'}
-    };
+  if (params[0] == StatusValues.online) {
+    Status.currentStatus = StatusValues.online;
+    return request.responsePlain('OK');
   }
 
-  if (path == StatusValues.offline) {
-    status = StatusValues.offline;
-    console.log('Режим *' + status + '*');
-    return {
-      code: 200,
-      data: 'OK',
-      headers: {name: 'content-type', value: 'text/plain'}
-    };
+  if (params[0] == StatusValues.offline) {
+    Status.currentStatus = StatusValues.offline;
+    return request.responsePlain('OK');
   }
 
-  if (path == 'tiles') {
+  if (params[0] == 'tiles') {
 
-    const path = zoomLevel + '/' + line;
-    const pathFile = path + '/' + filename;
+    const path = params[1] + '/' + params[2];
+    const pathFile = path + '/' + params[3];
 
     const tile = await tileWorker(path, pathFile);
 
     if (tile != undefined) {
-      return {
-        code: 200,
-        data: tile,
-        headers: {name: 'content-type', value: 'image/png'}
-      };
+      return request.responsePng(tile);
     }
 
 
   }
 
-  return {
-    code: 404,
-    data: 'not found' + filename + line + zoomLevel,
-    headers: {name: 'content-type', value: 'text/plain'}
-  };
+  return request.responseNotFound();
 }
 
 export {middleware};

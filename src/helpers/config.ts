@@ -8,6 +8,6 @@ type config = {
 
 const configType = (process.env['config'] || 'development');
 
-const content = fs.readFileSync(__dirname + '/../config/config.' + configType + '.json', { encoding: 'utf-8' });
+const content = fs.readFileSync(__dirname + '/../../config/config.' + configType + '.json', { encoding: 'utf-8' });
 const Config: config = JSON.parse(content);
-export default Config;
+export {Config};

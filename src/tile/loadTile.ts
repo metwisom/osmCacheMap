@@ -1,4 +1,4 @@
-import stealTile from '../stealer';
+import {stealTile} from '../stealer';
 import {Status, StatusValues} from '../helpers/statuses';
 
 async function loadTile(path: string, pathFile: string): Promise<Buffer> {
@@ -7,10 +7,10 @@ async function loadTile(path: string, pathFile: string): Promise<Buffer> {
     throw {
       code: 404,
       data: 'tile was not found',
-      headers: { name: 'content-type', value: 'text/plain' }
+      headers: {name: 'content-type', value: 'text/plain'},
     };
   }
   return buffer;
 }
 
-export { loadTile };
+export {loadTile};
