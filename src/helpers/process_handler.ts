@@ -1,7 +1,7 @@
 import {Build} from './build';
 
 async function handle(signal: string) {
-  console.log('Отключение *' + signal + '*\n*v' + Build.version + '*');
+  console.log('Отключение ' + signal + '\nver: ' + Build.version);
   process.exit();
 }
 

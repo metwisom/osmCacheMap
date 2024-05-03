@@ -1,18 +1,20 @@
 import http from 'http';
-import {Config} from '../helpers/config';
 import {Request} from './request';
-import {Build} from '../helpers/build';
-import {Status} from '../helpers/statuses';
+import {Middleware} from './middleware';
 
 
 class Server {
-  create(): void {
-    http.createServer((req, res) => new Request(req, res).handle())
-    .listen(Config.HTTP_PORT, () => {
-      const version = Build.version;
-      const status = Status.currentStatus.toUpperCase();
-      const config = process.env['config'];
-      console.log(`Запуск, режим ${status}\nver.${version}, env ${config}`);
+  middleware: Middleware = (): Promise<void> => Promise.resolve();
+
+  setMiddleware(middleware: Middleware): this {
+    this.middleware = middleware;
+    return this;
+  }
+
+  start(port: number): Promise<void> {
+    return new Promise((resolve) => {
+      http.createServer((req, res) => new Request(req, res, this.middleware).handle())
+        .listen(port, resolve);
     });
   }
 }

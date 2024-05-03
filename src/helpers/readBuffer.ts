@@ -1,13 +1,15 @@
 import fs from 'fs';
 
-export default function readBuffer(url: string): Promise<Buffer | undefined> {
+function readBuffer(path: string): Promise<Buffer> {
   const file: Buffer[] = [];
-  return new Promise(r => {
-    if (!fs.existsSync(url)) {
-      return r(undefined);
+  return new Promise((resolve, reject) => {
+    if (!fs.existsSync(path)) {
+      return reject('tile not found on disk');
     }
-    fs.createReadStream(url)
+    fs.createReadStream(path)
       .on('data', data => file.push(typeof data == 'string' ? Buffer.from(data) : data))
-      .on('end', () => r(Buffer.concat(file)));
+      .on('end', () => resolve(Buffer.concat(file)));
   });
 }
+
+export {readBuffer};

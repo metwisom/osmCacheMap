@@ -1,13 +1,15 @@
 import http from 'http';
-import {middleware} from './middleware';
+import {Middleware} from './middleware';
 
 class Request {
   request: http.IncomingMessage;
   response: http.ServerResponse;
+  middleware: Middleware;
 
-  constructor(request: http.IncomingMessage, response: http.ServerResponse) {
+  constructor(request: http.IncomingMessage, response: http.ServerResponse, middleware: Middleware) {
     this.request = request;
     this.response = response;
+    this.middleware = middleware;
   }
 
   responseNotFound(): void {
@@ -59,7 +61,7 @@ class Request {
 
     const params = urlPathTarget.split('/').filter(Boolean);
 
-    await middleware(this, params);
+    await this.middleware(this, params);
     return;
 
   }
