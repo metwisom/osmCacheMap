@@ -1,5 +1,5 @@
-import fs from 'fs';
+import {syncReadFileBuffer} from '../core/reader';
 
-const favicon = fs.readFileSync(__dirname + '/../../resource/favicon.ico');
+const favicon = syncReadFileBuffer('./resource/favicon.ico');
 export {favicon};
 

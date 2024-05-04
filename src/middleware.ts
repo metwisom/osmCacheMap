@@ -22,7 +22,7 @@ const middleware: Middleware = async function (request: Request, [command, zoom,
       const pathFile = path + '/' + file;
 
       const tile = await tileWorker(path, pathFile);
-
+      console.log(tile);
       if (tile) {
         return request.responsePng(tile);
       }

@@ -1,6 +1,6 @@
 import mkdirp from 'mkdirp';
 import {Config} from '../helpers/config';
-import fs from 'fs';
+import fs from 'node:fs';
 import fetch from 'node-fetch';
 
 const hosts = Config.HOSTS;
@@ -9,15 +9,15 @@ const getHost = () => hosts[Math.floor(Math.random() * hosts.length)];
 
 async function loadTile(path: string, pathFile: string): Promise<Buffer | null> {
 
-
   await mkdirp(Config.CACHE_FOLDER + path + '/');
-  const exist = fs.existsSync(Config.CACHE_FOLDER + pathFile);
-  if (exist) {
-    fs.unlink(Config.CACHE_FOLDER + pathFile, (err) => {
-      if (err) console.error(err);
-    });
-  }
+
   return new Promise((resolve, reject) => {
+    const exist = fs.existsSync(Config.CACHE_FOLDER + pathFile);
+    if (exist) {
+      fs.unlink(Config.CACHE_FOLDER + pathFile, (err) => {
+        if (err) reject(err);
+      });
+    }
 
     fetch(getHost() + `/${pathFile}`, {
       method: 'get',
@@ -35,7 +35,10 @@ async function loadTile(path: string, pathFile: string): Promise<Buffer | null> 
         const responseBuffer = await res.buffer();
         const responseText = responseBuffer.toString();
         if (responseText == 'Access denied.') {
-          throw 'openstreetmap возвращает "Access denied."';
+          reject('openstreetmap возвращает "Access denied."');
+        }
+        if(res.status == 400){
+          reject('openstreetmap возвращает "Access denied."');
         }
         return responseBuffer;
       })
@@ -44,7 +47,6 @@ async function loadTile(path: string, pathFile: string): Promise<Buffer | null> 
         if (data.length > 49) {
           fs.writeFile(Config.CACHE_FOLDER + pathFile, data, (err) => {
             if (err) reject(err);
-            console.log('The file has been saved!');
             resolve(blob);
           });
         }

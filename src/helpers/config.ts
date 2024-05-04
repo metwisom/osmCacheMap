@@ -1,13 +1,12 @@
-import fs from 'fs';
+import {syncReadFileString} from '../core/reader';
 
 type config = {
-    HTTP_PORT: number,
-    CACHE_FOLDER: string,
-    HOSTS: string[]
+  HTTP_PORT: number,
+  CACHE_FOLDER: string,
+  HOSTS: string[]
 }
 
 const configType = (process.env['config'] || 'development');
-
-const content = fs.readFileSync(__dirname + '/../../config/config.' + configType + '.json', { encoding: 'utf-8' });
+const content = syncReadFileString(`./config/config.${configType}.json`);
 const Config: config = JSON.parse(content);
 export {Config};

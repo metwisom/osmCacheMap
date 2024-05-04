@@ -1,10 +1,10 @@
-import fs from 'fs';
+import {syncReadFileString} from '../core/reader';
 
 type build = {
   version: string
 }
 
-const content = fs.readFileSync(__dirname + '/../../package.json', {encoding: 'utf-8'});
+const content = syncReadFileString('./package.json');
 const Build: build = JSON.parse(content);
 
 export {Build};
