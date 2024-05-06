@@ -18,21 +18,19 @@ async function tileWorker(path: string, pathFile: string): Promise<Buffer | null
 
   if (StatusValues.online == Status.currentStatus) {
     return loadTile(path, pathFile)
-    .then(tile => tileCache[tileName] = tile);
+      .then(tile => tileCache[tileName] = tile);
   }
-  console.log(tileName);
   if (tileCache[tileName] === undefined) {
     await readBuffer(tileName)
-    .then(buffer => {
-      tileCache[tileName] = buffer;
-    })
-    .catch(async _ => {
-      await loadTile(path, pathFile)
-      .then(file => {
-        console.log(file)
-        tileCache[tileName] = file;
-      }).catch(e => console.log(e));
-    });
+      .then(buffer => {
+        tileCache[tileName] = buffer;
+      })
+      .catch(async () => {
+        await loadTile(path, pathFile)
+          .then(file => {
+            tileCache[tileName] = file;
+          }).catch(e => console.log(e));
+      });
   }
 
   return tileCache[tileName] ?? null;

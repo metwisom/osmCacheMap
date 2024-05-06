@@ -5,6 +5,9 @@ import {Request} from './webServer/request';
 import {Middleware} from './webServer/middleware';
 
 const middleware: Middleware = async function (request: Request, [command, zoom, line, file]: string[]): Promise<void> {
+  request.response.setHeader('Connection', 'keep-alive');
+  request.response.setHeader('Keep-Alive', 'timeout=5');
+  request.response.setHeader('Transfer-Encoding', 'chunked');
   switch (command) {
   case 'favicon.ico':
     return request.responseXIcon(favicon);
@@ -22,7 +25,6 @@ const middleware: Middleware = async function (request: Request, [command, zoom,
       const pathFile = path + '/' + file;
 
       const tile = await tileWorker(path, pathFile);
-      console.log(tile);
       if (tile) {
         return request.responsePng(tile);
       }

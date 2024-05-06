@@ -1,4 +1,4 @@
-import http from 'http';
+import http from 'node:http';
 import {Request} from './request';
 import {Middleware} from './middleware';
 
